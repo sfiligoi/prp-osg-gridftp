@@ -10,11 +10,11 @@ RUN yum -y install  \
 
 RUN yum clean all
 
-#ADD cron.d/fetch-crl.cron /etc/cron.d/fetch-crl.cron
+ADD cron.d/fetch-crl.cron /etc/cron.d/fetch-crl.cron
 
-#ADD supervisord.d/condor-ce.conf /etc/supervisord.d/condor-ce.conf
+ADD supervisord.d/gridftp.conf /etc/supervisord.d/gridftp.conf
 
-#ADD image-config.d/90_osg-configure.sh /etc/osg/image-config.d/90_osg-configure.sh 
+ADD image-config.d/90_osg-configure.sh /etc/osg/image-config.d/90_osg-configure.sh 
 
 # enables gratia
 #RUN touch /var/lock/subsys/gratia-probes-cron
