@@ -19,4 +19,3 @@ RUN yum clean all
 # enables gratia
 #RUN touch /var/lock/subsys/gratia-probes-cron
 
-CMD ["/usr/bin/supervisord_startup.sh"]
