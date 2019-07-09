@@ -17,5 +17,5 @@ ADD supervisord.d/gridftp.conf /etc/supervisord.d/gridftp.conf
 ADD image-config.d/90_osg-configure.sh /etc/osg/image-config.d/90_osg-configure.sh 
 
 # enables gratia
-#RUN touch /var/lock/subsys/gratia-probes-cron
+RUN touch /var/lock/subsys/gratia-probes-cron
 
