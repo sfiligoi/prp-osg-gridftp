@@ -1,0 +1,3 @@
+# Add DNs allowed by gridftp
+"/DC=org/DC=cilogon/C=US/O=University of California-San Diego/CN=Igor Sfiligoi A2859851" icecubeprod
+"/DC=org/DC=cilogon/C=US/O=University of Wisconsin-Madison/CN=DAVID SCHULTZ A11726" icecubeprod

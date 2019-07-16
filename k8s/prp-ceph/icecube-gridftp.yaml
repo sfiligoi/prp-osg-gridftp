@@ -1,0 +1,91 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: icecube-gridftp
+  namespace: osg
+  labels:
+    k8s-app: icecube-gridftp
+spec:
+  template:
+    metadata: 
+      labels:
+        k8s-app: icecube-gridftp
+    spec:
+      hostNetwork: true
+      nodeSelector: 
+        kubernetes.io/hostname: xcache-11.t2.ucsd.edu
+      containers:
+      - name: gridftp
+        image: sfiligoi/prp-org-gridftp:latest
+        imagePullPolicy: Always
+        #command: ["sh", "-c", "sleep infinity"]
+        resources:
+           limits:
+             memory: 8Gi
+             cpu: 2
+           requests:
+             memory: 0.5Gi
+             cpu: 0.25
+        volumeMounts:
+        - name: hostcert
+          mountPath: /etc/grid-security/hostcert.pem
+        - name: hostkey
+          mountPath: /etc/grid-security/hostkey.pem
+        - name: ceph-store
+          mountPath: /data/ceph
+        - name: gridmap
+          mountPath: /etc/grid-security/grid-mapfile
+          subPath: grid-mapfile
+        - name: podinit
+          mountPath: /etc/osg/image-config.d/80_pod_init.sh
+          subPath: 80_pod_init.sh
+        - name: siteinfo
+          mountPath: /etc/osg/config.d/40-siteinfo.ini
+          subPath: 40-siteinfo.ini
+        - name: ports
+          mountPath: /etc/gridftp.conf
+          subPath: gridftp.conf
+      volumes:
+      - name : hostcert
+        hostPath:
+           path: /etc/grid-security/hostcert.pem
+           type: File
+      - name : hostkey
+        hostPath:
+           path: /etc/grid-security/hostkey.pem
+           type: File
+      - name: ceph-store
+        flexVolume:
+          driver: ceph.rook.io/rook
+          fsType: ceph
+          options:
+            clusterNamespace: rook
+            fsName: nautilusfs
+            path: /icecube
+            mountUser: icecube
+            mountSecret: icecube-gridftp-ceph
+      - name: gridmap
+        configMap:
+          name: icecube-gridftp-config
+          items:
+             - key: grid-mapfile
+               path: grid-mapfile
+      - name: podinit
+        configMap:
+          name: icecube-gridftp-config
+          items:
+             - key: 80_pod_init.sh
+               path: 80_pod_init.sh
+      - name: siteinfo
+        configMap:
+          name: icecube-gridftp-config
+          items:
+             - key: 40-siteinfo.ini
+               path: 40-siteinfo.ini
+      - name: ports
+        configMap:
+          name: icecube-gridftp-config
+          items:
+             - key: gridftp.conf
+               path: gridftp.conf
+
